@@ -28,7 +28,6 @@ public class Favorite {
     @OneToOne(cascade = DETACH)
     private User user;
 
-
     //******************************************  Announcement  ***************************
     @ManyToOne(cascade = DETACH)
     private Announcement announcement;

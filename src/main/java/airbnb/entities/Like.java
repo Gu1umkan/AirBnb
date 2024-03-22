@@ -26,10 +26,6 @@ public class Like {
     @ManyToOne(cascade = DETACH)
     private User user;
 
-    //********************************** Announcement  *************************
-    @ManyToOne(cascade = DETACH)
-    private Announcement announcement;
-
     //********************************** Comment  *************************
     @ManyToOne(cascade = DETACH)
     private Feedback feedback;

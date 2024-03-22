@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Builder
-public class SingUpRequest {
+public class SignUpRequest {
 
     private String fullName;
 

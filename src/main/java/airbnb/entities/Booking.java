@@ -22,8 +22,8 @@ public class Booking {
     @SequenceGenerator(name = "bookings_seq", allocationSize = 1)
 
     private Long id;
-    private LocalDate check_In;
-    private LocalDate check_Out;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
     private BigDecimal  totalPrice;
 
     //************************************  User   **************************************
