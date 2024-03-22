@@ -1,14 +1,11 @@
 package airbnb.api;
 
+import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.service.AnnouncementService;
-import airbnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/announcement")
@@ -21,5 +18,11 @@ public class AnnouncementApi {
     @PostMapping("/assign/{announcementId}")
     public SimpleResponse assignHome(@PathVariable Long announcementId){
         return  announcementService.assignHome(announcementId);
+    }
+
+    @Secured("USER")
+    @PostMapping("/save")
+    public SimpleResponse save(@RequestBody AnnouncementRequest announcementRequest ){
+        return announcementService.save(announcementRequest);
     }
 }

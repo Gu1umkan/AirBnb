@@ -17,9 +17,10 @@ public class AuthAPI {
 
     @PostMapping
     public RegisterResponse singUp (@RequestBody SignUpRequest signUpRequest){
-        return  useService.singUp(signUpRequest);
+        return useService.singUp(signUpRequest);
     }
-    @GetMapping
+
+    @PostMapping("/sign-in")
     public LoginResponse singIn (@RequestBody LoginRequest singInRequest){
         return useService.singIn(singInRequest);
     }

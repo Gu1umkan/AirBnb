@@ -34,7 +34,7 @@ public class JwtService {
         Algorithm algorithm = Algorithm.HMAC512(secretKey);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = jwtVerifier.verify(token);
-        return decodedJWT.getClaim("email").asString();
+        return decodedJWT.getClaim(" email ").asString();
 
     }
 }

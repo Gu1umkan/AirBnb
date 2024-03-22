@@ -33,13 +33,10 @@ public class Announcement {
     private String address;
     private Boolean  isActive;
     private String rejectAnnouncement;
-
     @ElementCollection
     private List<String> images;
-
     @Enumerated(EnumType.STRING)
     private HouseType houseType;
-
     @Enumerated(EnumType.STRING)
     private Region region;
     private int rating;

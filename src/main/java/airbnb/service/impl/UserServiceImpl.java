@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AnnouncementRepository announcementRepository;
+    private final AnnouncementRepository  announcementRepository;
 
     @Override
     public RegisterResponse singUp(SignUpRequest singUpRequest) {

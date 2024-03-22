@@ -1,6 +1,7 @@
 package airbnb.dto.response;
 
 import airbnb.entities.enums.Role;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.math.BigDecimal;
