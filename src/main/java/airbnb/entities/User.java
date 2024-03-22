@@ -35,11 +35,10 @@ public class User  implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
     private BigDecimal money;
-
     private LocalDate createdAt;
     private LocalDate updatedAt;
+
 
 
     //************************************  Like   **************************************

@@ -1,13 +1,15 @@
+server:
+    port: 8080
 spring:
     datasource:
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/airbnb
+        url: jdbc:postgresql://localhost:5432/figma
         username: postgres
-        password: 1234
+        password: Urmat0204
 
     jpa:
         hibernate:
-          ddl-auto: create-drop
+          ddl-auto: create
         show-sql: true
         open-in-view: false
 

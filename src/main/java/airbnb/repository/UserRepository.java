@@ -1,5 +1,6 @@
 package airbnb.repository;
 
+import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.User;
 import airbnb.exception.NotFoundException;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -14,4 +15,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
        return findByEmail(email).orElseThrow(()->
                new NotFoundException("User with email: " + email + " not found!"));
    }
+
+
+    boolean existsByEmail(String email);
+
 }

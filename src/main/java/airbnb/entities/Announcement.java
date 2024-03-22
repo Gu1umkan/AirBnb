@@ -31,6 +31,8 @@ public class Announcement {
     private int MaxOfGuests;
     private String town;
     private String address;
+    private Boolean  isActive;
+    private String rejectAnnouncement;
 
     @ElementCollection
     private List<String> images;
