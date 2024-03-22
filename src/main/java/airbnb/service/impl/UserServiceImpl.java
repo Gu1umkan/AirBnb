@@ -2,11 +2,10 @@ package airbnb.service.impl;
 
 import airbnb.config.jwt.JwtService;
 import airbnb.dto.request.LoginRequest;
-import airbnb.dto.request.SingUpRequest;
+import airbnb.dto.request.SignUpRequest;
 import airbnb.dto.response.LoginResponse;
 import airbnb.dto.response.RegisterResponse;
 import airbnb.dto.response.SimpleResponse;
-import airbnb.entities.Announcement;
 import airbnb.entities.User;
 import airbnb.entities.enums.Role;
 import airbnb.exception.NotFoundException;
@@ -28,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final AnnouncementRepository announcementRepository;
 
     @Override
-    public RegisterResponse singUp(SingUpRequest singUpRequest) {
+    public RegisterResponse singUp(SignUpRequest singUpRequest) {
         boolean  exists = userRepository.existsByEmail(singUpRequest.getEmail());
         if(exists) throw  new NotFoundException("Email : " + singUpRequest.getEmail()+ " already exist");
         if(!singUpRequest.getPassword().equals(singUpRequest.getPasswordConfig()))

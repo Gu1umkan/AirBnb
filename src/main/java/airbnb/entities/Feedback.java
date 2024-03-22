@@ -27,6 +27,7 @@ public class Feedback {
     private List<String> images;
     private LocalDate createdAt;
     private LocalDate updateAt;
+    private int rating;
 
 
     //******************************************  User   ***************************
