@@ -42,7 +42,7 @@ public class Announcement {
 
     @Enumerated(EnumType.STRING)
     private Region region;
-
+    private int rating;
 
 
     //************************************  User   **************************************
@@ -52,14 +52,6 @@ public class Announcement {
     //************************************  Comment  **************************************
     @OneToMany(mappedBy = "announcement",cascade = {DETACH,REMOVE})
     private List<Feedback> feedbacks;
-
-    //************************************  Like  **************************************
-    @OneToMany(mappedBy = "announcement",cascade = {DETACH,REMOVE})
-    private List<Like> likes;
-
-    //************************************  Rating  **************************************
-    @OneToMany(mappedBy = "announcement",cascade = {DETACH,REMOVE})
-    private List<Rating> ratings;
 
     //************************************  Favorites  **************************************
     @OneToMany(mappedBy = "announcement",cascade = {DETACH,REMOVE})

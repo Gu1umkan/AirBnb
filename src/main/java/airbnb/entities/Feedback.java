@@ -33,7 +33,6 @@ public class Feedback {
     @ManyToOne(cascade = DETACH)
     private User user;
 
-
     //******************************************  Like   ***************************
     @OneToMany(mappedBy = "feedback",cascade = {DETACH,REMOVE})
     private List<Like> likes;

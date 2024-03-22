@@ -20,7 +20,6 @@ public class Block {
 
     private Long id;
 
-
     //************************************  User   **************************************
     @ManyToOne
     private User user;
