@@ -34,7 +34,6 @@ public class Booking {
     @ManyToOne(cascade = DETACH)
     private Announcement announcement;
 
-    //************************************  User   **************************************
 
 }
 

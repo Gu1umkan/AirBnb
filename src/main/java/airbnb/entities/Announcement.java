@@ -42,7 +42,7 @@ public class Announcement {
 
     @Enumerated(EnumType.STRING)
     private Region region;
-
+    private int rating;
 
 
     //************************************  User   **************************************
