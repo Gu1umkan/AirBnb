@@ -3,6 +3,7 @@ package airbnb.dto.request;
 import airbnb.entities.enums.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class SingUpRequest {
-
+    @NotNull
     private String fullName;
 
     private String  image;
@@ -25,7 +26,6 @@ public class SingUpRequest {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
     private BigDecimal money;
 
     private LocalDate createdAt;
