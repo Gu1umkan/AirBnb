@@ -1,6 +1,5 @@
 package airbnb.api;
 
-import airbnb.dto.response.LikeResponse;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,11 +14,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class LikeApi {
     private final LikeService likeService;
-
-    @GetMapping("/get/count/{feedbackId}")
-    public LikeResponse getLikeAndDislikeByFeedback(@PathVariable Long feedbackId) {
-        return likeService.getLikeAndDislikeByFeedback(feedbackId);
-    }
 
     @PreAuthorize("hasAnyAuthority('VENDOR', 'USER')")
     @Operation(description = "Like or dislike feedback")
