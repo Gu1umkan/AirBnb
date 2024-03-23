@@ -16,15 +16,14 @@ public class AuthAPI {
     private final UserService useService;
 
     @PostMapping
-    public RegisterResponse singUp (@RequestBody SignUpRequest signUpRequest){
-        return  useService.singUp(signUpRequest);
+    public RegisterResponse singUp(@RequestBody SignUpRequest signUpRequest) {
+        return useService.singUp(signUpRequest);
     }
+
     @GetMapping
-    public LoginResponse singIn (@RequestBody LoginRequest singInRequest){
+    public LoginResponse singIn(@RequestBody LoginRequest singInRequest) {
         return useService.singIn(singInRequest);
     }
-
-
 
 
 }

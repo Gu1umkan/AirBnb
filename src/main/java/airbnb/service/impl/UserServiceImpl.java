@@ -28,9 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegisterResponse singUp(SignUpRequest singUpRequest) {
-        boolean  exists = userRepository.existsByEmail(singUpRequest.getEmail());
-        if(exists) throw  new NotFoundException("Email : " + singUpRequest.getEmail()+ " already exist");
-        if(!singUpRequest.getPassword().equals(singUpRequest.getPasswordConfig()))
+        boolean exists = userRepository.existsByEmail(singUpRequest.getEmail());
+        if (exists) throw new NotFoundException("Email : " + singUpRequest.getEmail() + " already exist");
+        if (!singUpRequest.getPassword().equals(singUpRequest.getPasswordConfig()))
             throw new NotFoundException("Invalid password");
 
         User user = new User();
@@ -56,13 +56,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponse singIn(LoginRequest singInRequest) {
-        User user =  userRepository.findByEmail(singInRequest.email()).orElseThrow(() ->
-                new NotFoundException("User with email: " + singInRequest.email()+" not found!"));
+        User user = userRepository.findByEmail(singInRequest.email()).orElseThrow(() ->
+                new NotFoundException("User with email: " + singInRequest.email() + " not found!"));
         String encodePassword = user.getPassword();
         String password = singInRequest.password();
 
-        boolean matches = passwordEncoder.matches(password,encodePassword);
-        if(!matches) throw new NotFoundException("Invalid password !! ");
+        boolean matches = passwordEncoder.matches(password, encodePassword);
+        if (!matches) throw new NotFoundException("Invalid password !! ");
 
         String token = jwtService.createToken(user);
 
