@@ -25,18 +25,18 @@ public class InitialService {
 
     @PostConstruct
     public  void  saveDate(){
-        String encode  = passwordEncoder.encode("urmat12");
+        String encode  = passwordEncoder.encode("java");
 
 
         User admin = User
                 .builder()
-                .fullName("Taichikov Urmat ")
+                .fullName("Admin")
                 .image("dsffsdf35343t3vd")
-                .email("urmat@gmail.com")
+                .email("admin@gmail.com")
                 .password(encode)
                 .money(BigDecimal.valueOf(20000))
                 .role(Role.ADMIN)
-                .createdAt(LocalDate.of(2004,02,04))
+                .createdAt(LocalDate.of(2004,2,4))
                 .build();
 
         userRepository.save(admin);
