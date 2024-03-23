@@ -27,7 +27,7 @@ public class Feedback {
     private List<String> images;
     private LocalDate createdAt;
     private LocalDate updateAt;
-    private int rating;
+        private int rating;
 
 
     //******************************************  User   ***************************
@@ -35,7 +35,7 @@ public class Feedback {
     private User user;
 
     //******************************************  Like   ***************************
-    @OneToMany(mappedBy = "feedback",cascade = {DETACH,REMOVE})
+    @OneToMany(mappedBy = "feedback",cascade = {DETACH,REMOVE}, fetch = FetchType.EAGER)
     private List<Like> likes;
 
     //******************************************  Favorite   ************************

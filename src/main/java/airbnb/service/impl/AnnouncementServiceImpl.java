@@ -32,7 +32,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return SimpleResponse
                 .builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Успешно одобреон !! ")
+                .message("Успешно одобрен !! ")
                 .build();
     }
 
