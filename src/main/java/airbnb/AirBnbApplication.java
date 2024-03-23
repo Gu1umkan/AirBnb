@@ -8,8 +8,6 @@ public class AirBnbApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AirBnbApplication.class, args);
-        System.out.println("HI");
-        System.out.println("Hello");
     }
 
 }

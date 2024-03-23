@@ -28,7 +28,7 @@ public class Announcement {
     private BigDecimal price;
     private String title;
     private String description;
-    private int MaxOfGuests;
+    private int maxOfGuests;
     private String town;
     private String address;
     private Boolean  isActive;
@@ -42,8 +42,6 @@ public class Announcement {
 
     @Enumerated(EnumType.STRING)
     private Region region;
-    private int rating;
-
 
     //************************************  User   **************************************
     @ManyToOne(cascade = DETACH)
