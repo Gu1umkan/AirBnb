@@ -1,6 +1,7 @@
 package airbnb.service.impl;
 
 import airbnb.dto.request.AnnouncementRequest;
+import airbnb.dto.response.AnnouncementSortResponse;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.Announcement;
 import airbnb.entities.User;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +60,15 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .httpStatus(HttpStatus.OK)
                 .message("Successfully saved your application")
                 .build();
+    }
+
+    @Override
+    public List<AnnouncementSortResponse> sortByRegion(Role region) {
+        return announcementRepo.sortByRegion(region);
+    }
+
+    @Override
+    public List<AnnouncementSortResponse> findAll() {
+        return announcementRepo.findAllAnnouncement();
     }
 }
