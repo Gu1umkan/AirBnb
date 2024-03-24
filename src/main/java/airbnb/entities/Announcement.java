@@ -33,7 +33,7 @@ public class Announcement {
     private Boolean  isActive;
     private String rejectAnnouncement;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> images;
 
     @Enumerated(EnumType.STRING)
