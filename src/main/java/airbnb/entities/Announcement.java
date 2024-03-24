@@ -8,8 +8,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.DETACH;
-import static jakarta.persistence.CascadeType.REMOVE;
+import static jakarta.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "announcements")
@@ -57,5 +56,7 @@ public class Announcement {
 
     //************************************  Booking  **************************************
 
+    @OneToMany(mappedBy = "announcement",cascade = {PERSIST,DETACH})
+    private List<Booking> bookings;
 }
 

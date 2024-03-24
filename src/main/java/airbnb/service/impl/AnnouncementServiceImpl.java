@@ -1,16 +1,15 @@
 package airbnb.service.impl;
 
 import airbnb.dto.request.AnnouncementRequest;
-import airbnb.dto.response.AnnouncementResponse;
-import airbnb.dto.response.AnnouncementResponsePagination;
-import airbnb.dto.response.FindByAnnouncementID;
-import airbnb.dto.response.SimpleResponse;
+import airbnb.dto.response.*;
 import airbnb.entities.Announcement;
+import airbnb.entities.Booking;
 import airbnb.entities.User;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
 import airbnb.entities.enums.Role;
 import airbnb.repository.AnnouncementRepository;
+import airbnb.repository.BookingRepository;
 import airbnb.repository.UserRepository;
 import airbnb.service.AnnouncementService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,8 @@ import java.util.List;
 public class AnnouncementServiceImpl implements AnnouncementService {
     private final AnnouncementRepository announcementRepo;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -75,6 +76,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public List<AnnouncementResponsePagination> findAll(int page, int size) {
+
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Announcement> posts = announcementRepo.getAllAnnouncement(pageable);
         List<AnnouncementResponsePagination> responseAll = new ArrayList<>();
@@ -122,7 +124,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public List<AnnouncementResponse> sortByHouse(HouseType houseType) {
-      return announcementRepo.sortByHouse(houseType);
+        List<AnnouncementResponse> houseResponse = announcementRepo.sortByHouse(houseType);
+        for (AnnouncementResponse h : houseResponse) {
+            h.setImages( announcementRepo.findImagesByHouseId(h.getId()));
+        }
+        return houseResponse;
     }
 
     @Override
@@ -162,6 +168,47 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public FindByAnnouncementID findById(Long announcementId) {
         Announcement byAnnouncementId = announcementRepo.findByAnnouncementId(announcementId);
         return announcementRepo.findByAnnouncementID(byAnnouncementId.getId());
+    }
+
+    @Override
+    public List<FindALlBookingsResponse> findALlBookings(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Booking> posts = bookingRepository.findAll(pageable);
+        List<FindALlBookingsResponse> responseAll = new ArrayList<>();
+
+        for ( Booking post : posts){
+            FindALlBookingsResponse findALlBookingsResponse = FindALlBookingsResponse
+                    .builder()
+                    .page(posts.getNumber() + 1)
+                    .size(posts.getTotalPages())
+                    .fullName(post.getUser().getFullName())
+                    .email(post.getAnnouncement().getUser().getEmail())
+                    .image(post.getAnnouncement().getUser().getImage())
+                    .price(post.getAnnouncement().getPrice())
+                    .title(post.getAnnouncement().getTitle())
+                    .description(post.getAnnouncement().getDescription())
+                    .maxOfGuests(post.getAnnouncement().getMaxOfGuests())
+                    .town(post.getAnnouncement().getTown())
+                    .address(post.getAnnouncement().getAddress())
+                    .isActive(post.getAnnouncement().getIsActive())
+                    .rejectAnnouncement(post.getAnnouncement().getRejectAnnouncement())
+                    .houseType(post.getAnnouncement().getHouseType())
+                    .region(post.getAnnouncement().getRegion())
+                    .checkIn(post.getCheckIn())
+                    .checkOut(post.getCheckOut())
+                    .build();
+            responseAll.add(findALlBookingsResponse);
+        }
+
+        return responseAll;
+    }
+
+    @Override
+    public FindALlBookingsResponse BookingsHouse(Long announcementId) {
+        Announcement byAnnouncementId = announcementRepo.findByAnnouncementId(announcementId);
+
+        return null;
     }
 
 }

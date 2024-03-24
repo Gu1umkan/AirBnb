@@ -163,4 +163,10 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     @Query("select a from Announcement  a  order by  a.price desc ")
     List<Announcement> SortDesc(String desc);
+
+    @Query(value = """
+     select i.images from announcement_images i 
+     where i.announcement_id = :id
+     """, nativeQuery = true)
+    List<String> findImagesByHouseId(Long id);
 }
