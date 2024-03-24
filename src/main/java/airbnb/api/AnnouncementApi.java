@@ -1,20 +1,21 @@
 package airbnb.api;
 
+import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.service.AnnouncementService;
-import airbnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/announcement")
 @RequiredArgsConstructor
 public class AnnouncementApi {
     private final AnnouncementService announcementService;
+    @PostMapping("/saveAnnouncement")
+    public SimpleResponse save(@RequestBody AnnouncementRequest announcementRequest){
+        return announcementService.saveAnnouncement(announcementRequest);
+    }
 
 
     @Secured("ADMIN")

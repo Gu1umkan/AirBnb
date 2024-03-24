@@ -1,0 +1,18 @@
+server:
+  port: 6060
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/airbnb
+    username: postgres
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    open-in-view: false
+
+app:
+  jwt:
+    secret: Airbnb&Java12

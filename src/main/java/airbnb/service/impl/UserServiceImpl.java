@@ -14,8 +14,11 @@ import airbnb.repository.UserRepository;
 import airbnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Service
 @RequiredArgsConstructor
@@ -27,55 +30,42 @@ public class UserServiceImpl implements UserService {
     private final AnnouncementRepository announcementRepository;
 
     @Override
-    public RegisterResponse singUp(SignUpRequest singUpRequest) {
-        boolean  exists = userRepository.existsByEmail(singUpRequest.getEmail());
-        if(exists) throw  new NotFoundException("Email : " + singUpRequest.getEmail()+ " already exist");
-        if(!singUpRequest.getPassword().equals(singUpRequest.getPasswordConfig()))
-            throw new NotFoundException("Invalid password");
-
-        User user = new User();
-        user.setFullName(singUpRequest.getFullName());
-        user.setEmail(singUpRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(singUpRequest.getPassword()));
-        user.setRole(Role.USER);
-
-        userRepository.save(user);
-
-        String newToken = jwtService.createToken(user);
-
-        return RegisterResponse.builder()
-                .token(newToken)
-                .simpleResponse(
-                        SimpleResponse.builder()
-                                .httpStatus(HttpStatus.OK)
-                                .message("Successfully sign - up! ")
-                                .build())
+    public SimpleResponse singUp(SignUpRequest singUpRequest) {
+        if (userRepository.existsByEmail(singUpRequest.getEmail())) {
+            throw new BadCredentialsException("User with " + singUpRequest.getEmail() + " already exists");
+        }
+        userRepository.save(User.builder()
+                .fullName(singUpRequest.getFullName())
+                .image(singUpRequest.getImage())
+                .email(singUpRequest.getEmail())
+                .password(passwordEncoder.encode(singUpRequest.getPassword()))
+                .role(singUpRequest.getRole())
+                .money(singUpRequest.getMoney())
+                .build());
+        log.info("User: " + singUpRequest.getFullName() + " successfully saved! ");
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("User: " + singUpRequest.getFullName() + " successfully saved! ")
                 .build();
 
     }
 
     @Override
     public LoginResponse singIn(LoginRequest singInRequest) {
-        User user =  userRepository.findByEmail(singInRequest.email()).orElseThrow(() ->
-                new NotFoundException("User with email: " + singInRequest.email()+" not found!"));
-        String encodePassword = user.getPassword();
-        String password = singInRequest.password();
-
-        boolean matches = passwordEncoder.matches(password,encodePassword);
-        if(!matches) throw new NotFoundException("Invalid password !! ");
-
-        String token = jwtService.createToken(user);
+        User byEmail = userRepository.getByEmail(singInRequest.email());
+        boolean matches = passwordEncoder.matches(singInRequest.password(), byEmail.getPassword());
+        if (!matches) throw new RuntimeException("Invalid password! ");
+        String token = jwtService.createToken(byEmail);
 
         return LoginResponse
                 .builder()
                 .token(token)
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .image(user.getImage())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .money(user.getMoney())
-                .createAt(user.getCreatedAt())
+                .id(byEmail.getId())
+                .fullName(byEmail.getFullName())
+                .image(byEmail.getImage())
+                .email(byEmail.getEmail())
+                .role(byEmail.getRole())
+                .money(byEmail.getMoney())
                 .build();
     }
 }

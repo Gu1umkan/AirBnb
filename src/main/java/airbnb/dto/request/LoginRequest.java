@@ -1,13 +1,13 @@
 package airbnb.dto.request;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
+import airbnb.validation.EmailValidation;
+import airbnb.validation.PasswordValidation;
 
-@Builder
-public record   LoginRequest(
+public record LoginRequest(
+        @EmailValidation
         String email,
+        @PasswordValidation
         String password
 ) {
 

@@ -4,7 +4,9 @@ import airbnb.dto.request.LoginRequest;
 import airbnb.dto.request.SignUpRequest;
 import airbnb.dto.response.LoginResponse;
 import airbnb.dto.response.RegisterResponse;
+import airbnb.dto.response.SimpleResponse;
 import airbnb.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,16 +17,15 @@ public class AuthAPI {
 
     private final UserService useService;
 
-    @PostMapping
-    public RegisterResponse singUp (@RequestBody SignUpRequest signUpRequest){
-        return  useService.singUp(signUpRequest);
+    @PostMapping("/signUp")
+    public SimpleResponse singUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+        return useService.singUp(signUpRequest);
     }
-    @GetMapping
-    public LoginResponse singIn (@RequestBody LoginRequest singInRequest){
+
+    @PostMapping("/signIn")
+    public LoginResponse singIn(@Valid @RequestBody LoginRequest singInRequest) {
         return useService.singIn(singInRequest);
     }
-
-
 
 
 }

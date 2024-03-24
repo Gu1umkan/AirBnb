@@ -22,14 +22,14 @@ import static jakarta.persistence.CascadeType.REMOVE;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User  implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", allocationSize = 1)
 
-    private  Long id;
+    private Long id;
     private String fullName;
-    private String  image;
+    private String image;
     private String email;
     private String password;
 
@@ -40,22 +40,21 @@ public class User  implements UserDetails {
     private LocalDate updatedAt;
 
 
-
     //************************************  Like   **************************************
-    @OneToMany(mappedBy = "user",cascade = {DETACH,REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {DETACH, REMOVE})
     private List<Like> likes;
 
     //************************************  Comment   **************************************
-    @OneToMany(mappedBy = "user",cascade = {DETACH,REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {DETACH, REMOVE})
     private List<Feedback> feedbacks;
 
     //************************************  Block   **************************************
-    @OneToOne(cascade = {DETACH,REMOVE})
+    @OneToOne(cascade = {DETACH, REMOVE})
     private Block block;
 
 
     //************************************  Announcement   **************************************
-    @OneToMany(mappedBy = "user",cascade = {DETACH,REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {DETACH, REMOVE})
     private List<Announcement> announcements;
 
     @Override
@@ -91,6 +90,16 @@ public class User  implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDate.now();
     }
 }
 

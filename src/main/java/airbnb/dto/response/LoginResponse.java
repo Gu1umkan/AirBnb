@@ -14,8 +14,7 @@ public record LoginResponse(
         String image,
         String email,
         Role role,
-        BigDecimal money,
-        LocalDate  createAt
+        BigDecimal money
 
         ) {
 }
