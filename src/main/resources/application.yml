@@ -1,11 +1,11 @@
 server:
-  port: 6060
+  port: 1212
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/airbnb
+    url: jdbc:postgresql://localhost:5432/figma
     username: postgres
-    password: 1234
+    password: Urmat0204
 
   jpa:
     hibernate:

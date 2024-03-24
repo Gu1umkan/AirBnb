@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
                 .image(singUpRequest.getImage())
                 .email(singUpRequest.getEmail())
                 .password(passwordEncoder.encode(singUpRequest.getPassword()))
-                .role(singUpRequest.getRole())
+                .role(Role.USER)
                 .money(singUpRequest.getMoney())
                 .build());
         log.info("User: " + singUpRequest.getFullName() + " successfully saved! ");
