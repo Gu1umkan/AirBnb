@@ -3,6 +3,7 @@ package airbnb.api;
 import airbnb.dto.request.AnnouncementComentRequest;
 import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.AnnouncementResponse;
+import airbnb.dto.response.FindByAnnouncementID;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
@@ -24,13 +25,10 @@ public class AnnouncementApi {
     public SimpleResponse save(@RequestBody AnnouncementRequest announcementRequest){
         return announcementService.saveAnnouncement(announcementRequest);
     }
-
-
     @Secured("ADMIN")
     @PostMapping("/assign/{announcementId}")
-    public SimpleResponse assignHome(@PathVariable Long announcementId,
-                                     @RequestBody AnnouncementComentRequest announcementComentRequest ){
-        return  announcementService.assignHome(announcementId,announcementComentRequest);
+    public SimpleResponse assignHome(@PathVariable Long announcementId){
+        return  announcementService.assignHome(announcementId);
     }
 
     @Secured({"ADMIN,USER,VENDOR"})
@@ -47,29 +45,46 @@ public class AnnouncementApi {
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
     @GetMapping("/sortByRegion")
-    public AnnouncementResponse sortByRegion(@RequestParam Region region){
+    public List<AnnouncementResponse> sortByRegion(@RequestParam Region region){
        return announcementService.sortByRegion(region);
     }
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
     @GetMapping("/sortByHouse")
-    public AnnouncementResponse sortByHouse(@RequestParam HouseType houseType){
+    public List<AnnouncementResponse> sortByHouse(@RequestParam HouseType houseType){
         return announcementService.sortByHouse(houseType);
     }
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
     @GetMapping("/SortByPrice")
-    public AnnouncementResponse sortByPrise(@RequestParam BigDecimal price){
+    public List<AnnouncementResponse> sortByPrise(@RequestParam BigDecimal price){
         return announcementService.sortByPrice(price);
     }
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
     @GetMapping("/Search")
-    public AnnouncementResponse Search(@RequestParam String search,
+    public List<AnnouncementResponse> Search(@RequestParam String search,
                                        Region region,
                                        HouseType houseType){
         return announcementService.Search(search,region ,houseType );
     }
+    @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
+    @GetMapping("/isActive")
+    public  List<AnnouncementResponse> isActive(){
+        return announcementService.isActive();
+    }
+
+    @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
+    @GetMapping("/findById/{announcementId}")
+    public FindByAnnouncementID findById(@PathVariable Long announcementId){
+        return announcementService.findById(announcementId);
+    }
+
+
+
+
+
+
 
 
 

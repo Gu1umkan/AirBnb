@@ -1,8 +1,8 @@
 package airbnb.service.impl;
 
-import airbnb.dto.request.AnnouncementComentRequest;
 import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.AnnouncementResponse;
+import airbnb.dto.response.FindByAnnouncementID;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.Announcement;
 import airbnb.entities.User;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,9 +33,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public SimpleResponse assignHome(Long applicationId, AnnouncementComentRequest announcementComentRequest) {
+    @Transactional
+    public SimpleResponse assignHome(Long applicationId) {
         Announcement application = announcementRepo.findByAnnouncementId(applicationId);
-        application.setRejectAnnouncement(announcementComentRequest.getRejectAnnouncement());
         application.setIsActive(true);
 
 
@@ -71,6 +72,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public List<AnnouncementResponse> findAll() {
         return announcementRepo.findAllAnnouncement();
+
     }
 
     @Override
@@ -87,23 +89,36 @@ public class AnnouncementServiceImpl implements AnnouncementService {
       }
 
     @Override
-    public AnnouncementResponse sortByRegion(Region region) {
+    public List<AnnouncementResponse> sortByRegion(Region region) {
         return announcementRepo.sortByRegion(region);
     }
 
     @Override
-    public AnnouncementResponse sortByHouse(HouseType houseType) {
+    public List<AnnouncementResponse> sortByHouse(HouseType houseType) {
         return announcementRepo.sortByHouse(houseType);
     }
 
     @Override
-    public AnnouncementResponse sortByPrice(BigDecimal price) {
+    public List<AnnouncementResponse> sortByPrice(BigDecimal price) {
         return announcementRepo.sortByPrice(price);
     }
 
     @Override
-    public AnnouncementResponse Search(String search,Region region,HouseType houseType) {
+    public List<AnnouncementResponse> Search(String search, Region region, HouseType houseType) {
         return announcementRepo.Search(search, region,houseType );
+    }
+
+
+    @Override
+    public List<AnnouncementResponse> isActive() {
+        boolean is = true;
+        return announcementRepo.isActive(is);
+    }
+
+    @Override
+    public FindByAnnouncementID findById(Long announcementId) {
+        Announcement byAnnouncementId = announcementRepo.findByAnnouncementId(announcementId);
+        return announcementRepo.findByAnnouncementID(byAnnouncementId.getId());
     }
 
 }

@@ -2,6 +2,7 @@ package airbnb.dto.request;
 
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
+import airbnb.validation.AnnouncementPrice.AnnouncementPriceValidation;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record AnnouncementRequest(
-    @NotNull(message = "not null")
+        @AnnouncementPriceValidation   @NotNull(message = "not null")
     BigDecimal price,
     @NotNull(message = "not null")
     String title,
