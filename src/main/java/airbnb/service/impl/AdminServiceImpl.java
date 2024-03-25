@@ -1,7 +1,5 @@
 package airbnb.service.impl;
-import airbnb.dto.response.HomeResponse;
-import airbnb.dto.response.PaginationResponse;
-import airbnb.dto.response.SimpleResponse;
+import airbnb.dto.response.*;
 import airbnb.entities.Announcement;
 import airbnb.exception.NotFoundException;
 import airbnb.repository.AdminRepository;
@@ -81,5 +79,30 @@ public class AdminServiceImpl implements AdminService {
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Successfully accepted!").build();
+    }
+
+    @Override
+    public ForHomeProfile find(long id) {
+        Announcement announcement = homeRepository.findById(id).orElseThrow(() -> new NotFoundException("Home with this id not found!"));
+        return ForHomeProfile.builder()
+                .user(ForShortUserInfo.builder()
+                        .gmail(announcement.getUser().getEmail())
+                        .photo(announcement.getUser().getImage())
+                        .fullName(announcement.getUser().getFullName())
+                        .id(announcement.getUser().getId()).build())
+                .title(announcement.getTitle())
+                .houseType(announcement.getHouseType())
+                .maxOfGuests(announcement.getMaxOfGuests())
+                .description(announcement.getDescription())
+                .address(announcement.getAddress())
+                .town(announcement.getTown())
+                .region(announcement.getRegion())
+                .id(announcement.getId())
+                .build();
+    }
+
+    @Override
+    public List<ForUsersTable> getAll() {
+        return null;
     }
 }
