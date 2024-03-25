@@ -23,7 +23,7 @@ public class InitialService {
     private final PasswordEncoder passwordEncoder;
     private int numberOfEmployees;
 
-//    @PostConstruct
+    @PostConstruct
     public  void  saveDate(){
         String encode  = passwordEncoder.encode("java12");
 
@@ -39,8 +39,9 @@ public class InitialService {
                 .createdAt(LocalDate.of(2004,2,4))
                 .build();
 
-        userRepository.save(admin);
-//        restaurantRepository.save(rest);
+//        userRepository.save(admin);
+//        restaurantRepository.save
+//        (rest);
 
         // validate
 
