@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 @Builder
 public record AnnouncementResponse(
-         Long id,
+        Long id,
          BigDecimal price,
          String title,
          String description,

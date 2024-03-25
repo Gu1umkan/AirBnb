@@ -6,11 +6,12 @@ import airbnb.entities.Announcement;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
 import airbnb.exception.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -153,4 +154,13 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
     ) from Announcement a join a.user u where  a.id =:announcementId
     """)
     FindByAnnouncementID findByAnnouncementID(Long announcementId);
+
+    @Query("select  a from Announcement a ")
+    Page<Announcement> getAllAnnouncement(Pageable pageable);
+
+    @Query("select a from Announcement a order by  a.price asc")
+    List<Announcement> SortAsc(String asc);
+
+    @Query("select a from Announcement  a  order by  a.price desc ")
+    List<Announcement> SortDesc(String desc);
 }

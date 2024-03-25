@@ -21,6 +21,9 @@ public class AuthAPI {
     @PostMapping("/signUp")
     public SimpleResponse singUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return useService.singUp(signUpRequest);
+
+
+
     }
 
     @PostMapping("/signIn")

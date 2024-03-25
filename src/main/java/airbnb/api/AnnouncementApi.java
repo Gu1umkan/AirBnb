@@ -1,8 +1,7 @@
 package airbnb.api;
-
-import airbnb.dto.request.AnnouncementComentRequest;
 import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.AnnouncementResponse;
+import airbnb.dto.response.AnnouncementResponsePagination;
 import airbnb.dto.response.FindByAnnouncementID;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.enums.HouseType;
@@ -31,10 +30,11 @@ public class AnnouncementApi {
         return  announcementService.assignHome(announcementId);
     }
 
-    @Secured({"ADMIN,USER,VENDOR"})
+    @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
     @GetMapping("/findAll")
-    public List<AnnouncementResponse> findAll(){
-        return announcementService.findAll();
+    public List<AnnouncementResponsePagination> findAll(@RequestParam int page,
+                                                        @RequestParam int size){
+        return announcementService.findAll(page,size);
     }
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
@@ -57,8 +57,8 @@ public class AnnouncementApi {
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
     @GetMapping("/SortByPrice")
-    public List<AnnouncementResponse> sortByPrise(@RequestParam BigDecimal price){
-        return announcementService.sortByPrice(price);
+    public List<AnnouncementResponse> sortByPrise(@RequestParam String ascOrDesc){
+        return announcementService.sortByPrice(ascOrDesc);
     }
 
     @PreAuthorize("hasAnyAuthority('VENDOR','USER','ADMIN')")
@@ -79,6 +79,7 @@ public class AnnouncementApi {
     public FindByAnnouncementID findById(@PathVariable Long announcementId){
         return announcementService.findById(announcementId);
     }
+
 
 
 
