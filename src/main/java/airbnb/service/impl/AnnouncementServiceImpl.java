@@ -205,10 +205,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public FindALlBookingsResponse BookingsHouse(Long announcementId) {
-        Announcement byAnnouncementId = announcementRepo.findByAnnouncementId(announcementId);
+    public BookingsHouseResponse BookingsHouse(Long announcementId) {
+        return  null;
 
-        return null;
     }
 
 }

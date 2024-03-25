@@ -1,6 +1,7 @@
 package airbnb.api;
 
 import airbnb.dto.response.AnnouncementResponse;
+import airbnb.dto.response.BookingsHouseResponse;
 import airbnb.dto.response.FindALlBookingsResponse;
 import airbnb.service.AnnouncementService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class VendorApi {
 
     @PreAuthorize("hasAnyAuthority('VENDOR')")
     @GetMapping("/{announcementId}")
-    public FindALlBookingsResponse BookingsHouse(@PathVariable Long announcementId){
+    public BookingsHouseResponse BookingsHouse(@PathVariable Long announcementId){
         return announcementService.BookingsHouse(announcementId);
     }
 

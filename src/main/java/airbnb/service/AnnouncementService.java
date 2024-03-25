@@ -33,5 +33,5 @@ public interface AnnouncementService {
     List<FindALlBookingsResponse> findALlBookings(int page, int size);
 
 
-    FindALlBookingsResponse BookingsHouse(Long announcementId);
+    BookingsHouseResponse BookingsHouse(Long announcementId);
 }
