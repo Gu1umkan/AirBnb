@@ -3,13 +3,13 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/figma
+    url: jdbc:postgresql://localhost:5432/airbnb
     username: postgres
-    password: Urmat0204
+    password: 1234
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     open-in-view: false
 
