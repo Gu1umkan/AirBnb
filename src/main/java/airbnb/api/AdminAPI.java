@@ -1,11 +1,9 @@
 package airbnb.api;
 import airbnb.dto.response.PaginationResponse;
+import airbnb.dto.response.SimpleResponse;
 import airbnb.service.AdminService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/admins")
@@ -17,4 +15,19 @@ public class AdminAPI {
                               @RequestParam int size){
         return adminService.getAllHome(page,size);
     }
+    @GetMapping("/reject/{id}")
+    SimpleResponse reject(@PathVariable long id,
+                          @RequestParam String cause){
+        return adminService.reject(id, cause);
+    }
+    @DeleteMapping("/delete/{id}")
+    SimpleResponse delete(@PathVariable long id){
+        return adminService.delete(id);
+    }
+    @PutMapping("/accept/{id}")
+    SimpleResponse accept (@PathVariable long id){
+        return  adminService.accept(id);
+    }
+
+
 }
