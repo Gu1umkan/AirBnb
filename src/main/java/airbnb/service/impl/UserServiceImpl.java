@@ -10,12 +10,14 @@ import airbnb.dto.response.UserInfoResponse;
 import airbnb.entities.Announcement;
 import airbnb.entities.User;
 import airbnb.entities.enums.Role;
+import airbnb.exception.ForbiddenException;
 import airbnb.exception.NotFoundException;
 import airbnb.repository.AnnouncementRepository;
 import airbnb.repository.UserRepository;
 import airbnb.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -116,7 +120,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public SimpleResponse deleteById(Long id) {
         User user = userRepository.gettById(id);
+        if(user.getRole().equals(Role.ADMIN)){
+            log.error(" You can't remove the administrator!!! ");
+            throw new ForbiddenException(" You can't remove the administrator!!! ");
+        }
         userRepository.delete(user);
+        log.info(" User with: " + user.getFullName() + " deleted! ");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("User with: " + user.getFullName() + " deleted! ")

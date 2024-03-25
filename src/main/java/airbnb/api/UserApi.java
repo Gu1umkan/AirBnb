@@ -8,6 +8,7 @@ import airbnb.entities.User;
 import airbnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,29 +19,29 @@ import java.util.List;
 public class UserApi {
     private final UserService userService;
 
-    @Secured("ADMIN")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'VENDOR', 'USER')")
     @GetMapping("/getAll")
     public GetAllUserResponse getAll(@RequestParam int page, @RequestParam int size) {
         return userService.getAll(page, size);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'VENDOR', 'USER')")
     @GetMapping("/findById")
     public UserInfoResponse findById() {
         return userService.findById();
     }
 
+    @Secured("ADMIN")
     @DeleteMapping("/delete/{id}")
     public SimpleResponse deleteById(@PathVariable Long id) {
         return userService.deleteById(id);
     }
 
+    @Secured("ADMIN")
     @PutMapping("/update")
     public UserInfoResponse updateById(@RequestBody SignUpRequest signUpRequest) {
         return userService.updateById(signUpRequest);
     }
-//    @PostMapping("/assign/{announcementId}")
-//    public SimpleResponse assiginUser(@PathVariable Long announcementId){
-//        return userService.assignUser(announcementId);
-//    }
+
 
 }
