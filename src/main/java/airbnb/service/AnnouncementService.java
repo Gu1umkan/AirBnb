@@ -2,12 +2,12 @@ package airbnb.service;
 
 import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.AnnouncementResponse;
+import airbnb.dto.response.AnnouncementResponsePagination;
 import airbnb.dto.response.FindByAnnouncementID;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface AnnouncementService {
@@ -15,7 +15,7 @@ public interface AnnouncementService {
 
     SimpleResponse saveAnnouncement(AnnouncementRequest announcementRequest);
 
-    List<AnnouncementResponse> findAll();
+    List<AnnouncementResponsePagination> findAll(int page, int size);
 
     SimpleResponse delete(Long announcementId);
 
@@ -24,7 +24,7 @@ public interface AnnouncementService {
 
     List<AnnouncementResponse> sortByHouse(HouseType houseType);
 
-    List<AnnouncementResponse> sortByPrice(BigDecimal price);
+    List<AnnouncementResponse> sortByPrice(String ascOrDesc);
 
     List<AnnouncementResponse> Search(String search,Region region,HouseType houseType);
 

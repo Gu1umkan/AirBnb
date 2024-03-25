@@ -2,6 +2,7 @@ package airbnb.service.impl;
 
 import airbnb.dto.request.AnnouncementRequest;
 import airbnb.dto.response.AnnouncementResponse;
+import airbnb.dto.response.AnnouncementResponsePagination;
 import airbnb.dto.response.FindByAnnouncementID;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.Announcement;
@@ -13,12 +14,15 @@ import airbnb.repository.AnnouncementRepository;
 import airbnb.repository.UserRepository;
 import airbnb.service.AnnouncementService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,8 +74,31 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<AnnouncementResponse> findAll() {
-        return announcementRepo.findAllAnnouncement();
+    public List<AnnouncementResponsePagination> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Announcement> posts = announcementRepo.getAllAnnouncement(pageable);
+        List<AnnouncementResponsePagination> responseAll = new ArrayList<>();
+
+        for (Announcement announcementAlls :posts.getContent() ){
+            AnnouncementResponsePagination announcementResponsePagination = AnnouncementResponsePagination
+                    .builder()
+                    .page(posts.getNumber() + 1)
+                    .size(posts.getTotalPages())
+                    .price(announcementAlls.getPrice())
+                    .title(announcementAlls.getTitle())
+                    .description(announcementAlls.getDescription())
+                    .maxOfGuests(announcementAlls.getMaxOfGuests())
+                    .town(announcementAlls.getTown())
+                    .address(announcementAlls.getAddress())
+                    .isActive(announcementAlls.getIsActive())
+                    .rejectAnnouncement(announcementAlls.getRejectAnnouncement())
+                    .houseType(announcementAlls.getHouseType())
+                    .region(announcementAlls.getRegion())
+                    .build();
+            responseAll.add(announcementResponsePagination);
+        }
+
+        return responseAll;
 
     }
 
@@ -95,19 +122,35 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public List<AnnouncementResponse> sortByHouse(HouseType houseType) {
-        return announcementRepo.sortByHouse(houseType);
+      return announcementRepo.sortByHouse(houseType);
     }
 
     @Override
-    public List<AnnouncementResponse> sortByPrice(BigDecimal price) {
-        return announcementRepo.sortByPrice(price);
+    public List<AnnouncementResponse> sortByPrice(String ascOrDesc) {
+        List<AnnouncementResponse> announcementResponses = new ArrayList<>();
+
+        if(ascOrDesc.equalsIgnoreCase("asc")){
+            List<Announcement> announcementAsc = announcementRepo.SortAsc("asc");
+            for (Announcement announcement : announcementAsc) {
+                announcementResponses.add(new AnnouncementResponse(announcement.getId(), announcement.getPrice(), announcement.getTitle(),
+                        announcement.getDescription(), announcement.getMaxOfGuests(), announcement.getTown(), announcement.getAddress(),
+                        announcement.getIsActive(), announcement.getRejectAnnouncement(), announcement.getHouseType(), announcement.getRegion()));
+               }
+        }else if(ascOrDesc.equalsIgnoreCase("desc")){
+            List<Announcement> announcementDesc = announcementRepo.SortDesc("desc");
+            for (Announcement announcement : announcementDesc) {
+                announcementResponses.add(new AnnouncementResponse(announcement.getId(), announcement.getPrice(), announcement.getTitle(),
+                        announcement.getDescription(), announcement.getMaxOfGuests(), announcement.getTown(), announcement.getAddress(),
+                        announcement.getIsActive(), announcement.getRejectAnnouncement(), announcement.getHouseType(), announcement.getRegion()));
+            }
+        }
+        return announcementResponses;
     }
 
     @Override
     public List<AnnouncementResponse> Search(String search, Region region, HouseType houseType) {
-        return announcementRepo.Search(search, region,houseType );
+     return announcementRepo.Search(search,region,houseType);
     }
-
 
     @Override
     public List<AnnouncementResponse> isActive() {
