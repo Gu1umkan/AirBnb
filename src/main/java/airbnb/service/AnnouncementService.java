@@ -34,4 +34,13 @@ public interface AnnouncementService {
 
 
     BookingsHouseResponse BookingsHouse(Long announcementId);
+
+
+    List<VendorMyAnnouncementResponse> MyAnnouncement( int page, int size);
+
+
+    SimpleResponse removeByAnnouncementVendor(Long announcementId);
+
+
+    SimpleResponse update(Long announcementId, AnnouncementUpdateRequest announcementRequest);
 }

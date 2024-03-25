@@ -2,12 +2,9 @@ package airbnb.dto.response;
 
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
-import jakarta.persistence.ElementCollection;
 import lombok.*;
 
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -23,33 +20,34 @@ public record BookingsHouseResponse (
         String town,
         Region region,
         int maxOfGuests,
-//    private BigDecimal price;
         List<BookingResponse> booked,
+        List<BookingInFavoritesResponse> inFavorites,
+        List<BookingFeedbackResponse>  feedback
 
     //////  booking  //////
 
-         Long ids,
-         String fullName,
-         String email,
-         String image,
-         LocalDate checkIn,
-         LocalDate checkOut,
-         BigDecimal totalPrice,
+//         Long ids,
+//         String fullName,
+//         String email,
+//         String image,
+//         LocalDate checkIn,
+//         LocalDate checkOut,
+//         BigDecimal totalPrice,
 
 
     /////  Feedback  /////
 
-        Long idd,
-        String feedback,
-        List<String> imagess,
-        LocalDate createdAt,
-        int rating,
+//        Long idd,
+//        String feedback,
+//        List<String> imagess,
+//        LocalDate createdAt,
+//        int rating,
 
     ///// like //////
-
-        Long id1,
-        Boolean isLike,
-        Boolean dislike
+//
+//        Long id1,
+//        Boolean isLike,
+//        Boolean dislike
 ){
 
 }

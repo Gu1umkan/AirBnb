@@ -6,25 +6,15 @@ import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 public record FindALlBookingsResponse(
         int page,
         int size,
-        String fullName,
-        String email,
-        String image,
-        BigDecimal price,
-        String title,
-        String description,
-        int maxOfGuests,
-        String town,
-        String address,
-        Boolean  isActive,
-        String rejectAnnouncement,
-        HouseType houseType,
-        Region region,
+        List<BookingsFindAllResponse> bookingsFindAllResponses,
         LocalDate checkIn,
         LocalDate checkOut
+
 ) {
 }
