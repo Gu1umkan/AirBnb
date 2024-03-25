@@ -1,14 +1,17 @@
 package airbnb.entities;
 
 
+import airbnb.dto.response.UserInfoResponse;
 import jakarta.persistence.*;
 import airbnb.entities.enums.Role;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -100,6 +103,10 @@ public class User implements UserDetails {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDate.now();
+    }
+
+    public UserInfoResponse convert() {
+        return new UserInfoResponse(this.id, this.fullName, this.image, this.email, this.role, this.money);
     }
 }
 

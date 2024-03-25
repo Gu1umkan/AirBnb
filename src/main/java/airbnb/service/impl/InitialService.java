@@ -23,7 +23,7 @@ public class InitialService {
     private final PasswordEncoder passwordEncoder;
     private int numberOfEmployees;
 
-    @PostConstruct
+//    @PostConstruct
     public  void  saveDate(){
         String encode  = passwordEncoder.encode("java12");
 
