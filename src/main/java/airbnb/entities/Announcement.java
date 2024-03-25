@@ -57,9 +57,5 @@ public class Announcement {
 
     //************************************  Booking  **************************************
 
-    @OneToMany(mappedBy = "announcement",cascade = {DETACH,REMOVE})
-    private List<Booking> bookings;
-
-
 }
 
