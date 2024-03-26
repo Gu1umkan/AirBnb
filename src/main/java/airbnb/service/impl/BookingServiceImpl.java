@@ -1,7 +1,7 @@
 package airbnb.service.impl;
 
 import airbnb.dto.request.BookingRequest;
-import airbnb.dto.response.BookingResponse;
+import airbnb.dto.response.SecondBookingResponse;
 import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.Announcement;
 import airbnb.entities.Booking;
@@ -30,12 +30,12 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
 
     @Override
-    public BookingResponse findBookingByPrincipalAndAnnouncement(Principal principal, Long announcementId) {
+    public SecondBookingResponse findBookingByPrincipalAndAnnouncement(Principal principal, Long announcementId) {
         User loginUser = getPrincipalUser(principal);
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(() -> new NotFoundException("Announcement with id " + announcementId + " not found!"));
         Booking booking = bookingRepository.findBookingByUserAndAnnouncement(loginUser, announcement);
         if (booking != null) {
-            return new BookingResponse(booking.getCheckIn(), booking.getCheckOut());
+            return new SecondBookingResponse(booking.getCheckIn(), booking.getCheckOut());
         }
         return null;
     }

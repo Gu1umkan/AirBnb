@@ -5,20 +5,23 @@ import airbnb.entities.enums.Region;
 import lombok.Builder;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Builder
-public record FindByAnnouncementID(
-        Long id,
+public record VendorMyAnnouncementResponse(
+        int page,
+        int size,
+        String fullName,
+        String email,
+        String image,
         BigDecimal price,
         String title,
         String description,
         int maxOfGuests,
         String town,
         String address,
+        Boolean  isActive,
+        String rejectAnnouncement,
         HouseType houseType,
-        Region region,
-
-        List<BookingFeedbackResponse> feedbacks
+        Region region
 ) {
 }

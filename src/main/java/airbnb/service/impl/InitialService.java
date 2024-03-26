@@ -39,7 +39,7 @@ public class InitialService {
                 .createdAt(LocalDate.of(2004,2,4))
                 .build();
 
-//        userRepository.save(admin);
+        userRepository.save(admin);
 //        restaurantRepository.save
 //        (rest);
 

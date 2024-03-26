@@ -5,6 +5,7 @@ import airbnb.entities.enums.Region;
 import lombok.Builder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Builder
 public record AnnouncementResponsePagination(
@@ -19,6 +20,7 @@ public record AnnouncementResponsePagination(
         Boolean  isActive,
         String rejectAnnouncement,
         HouseType houseType,
-        Region region
+        Region region,
+        List<String> image
 ) {
 }
