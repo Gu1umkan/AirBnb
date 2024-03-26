@@ -1,5 +1,6 @@
 package airbnb.exception.handler;
 
+import airbnb.exception.BookingAlreadyExistsException;
 import airbnb.exception.ExceptionResponse;
 import airbnb.exception.ForbiddenException;
 import airbnb.exception.NotFoundException;
@@ -16,6 +17,16 @@ public class GlobalHandlerException {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse moneyException (MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
+        return ExceptionResponse.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .exceptionClassName(e.getClass().getSimpleName())
+                .message(e.getMessage())
+                .build();
+    }
+    @ExceptionHandler(BookingAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse bookingAlreadyExists (BookingAlreadyExistsException e) {
         log.error(e.getMessage());
         return ExceptionResponse.builder()
                 .httpStatus(HttpStatus.BAD_REQUEST)
