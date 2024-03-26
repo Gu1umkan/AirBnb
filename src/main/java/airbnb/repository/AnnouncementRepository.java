@@ -2,6 +2,7 @@ package airbnb.repository;
 
 import airbnb.dto.response.AnnouncementResponse;
 import airbnb.dto.response.FindByAnnouncementID;
+import airbnb.dto.response.SimpleResponse;
 import airbnb.entities.Announcement;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
@@ -9,9 +10,11 @@ import airbnb.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -163,4 +166,15 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     @Query("select a from Announcement  a  order by  a.price desc ")
     List<Announcement> SortDesc(String desc);
+
+    @Query(value = """
+     select i.images from announcement_images i 
+     where i.announcement_id = :id
+     """, nativeQuery = true)
+    List<String> findImagesByHouseId(Long id);
+
+    @Modifying
+    @Transactional
+    @Query(" delete from Announcement  a where  a.id = :id ")
+    SimpleResponse removeByAnnouncementVendor(Long id);
 }
