@@ -58,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
                 } else {
                     throw new NotFoundException("You don't have enough funds!");
                 }
-            }else {
+            } else {
                 throw new NotFoundException("This house is already occupied!");
             }
         } else {

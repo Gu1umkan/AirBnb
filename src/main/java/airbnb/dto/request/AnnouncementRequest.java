@@ -3,32 +3,35 @@ package airbnb.dto.request;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
 import airbnb.validation.AnnouncementPrice.AnnouncementPriceValidation;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+@Builder
 public record AnnouncementRequest(
-        @AnnouncementPriceValidation   @NotNull(message = "not null")
+        @AnnouncementPriceValidation
     BigDecimal price,
-    @NotNull(message = "not null")
+    @NotBlank
     String title,
-    @NotNull(message = "not null")
+        @NotBlank
     String description,
-    @NotNull(message = "not null")
+
     int maxOfGuests,
-    @NotNull(message = "not null")
+        @NotBlank
     String town,
-    @NotNull(message = "not null")
+        @Column(unique = true)  @NotBlank
     String address,
-    @NotNull(message = "not null")
+        @NotBlank
     List<String> images,
-    @NotNull(message = "not null")
+        @NotBlank
     HouseType houseType,
-    @NotNull(message = "not null")
+        @NotBlank
     Region region
     ){
 }
