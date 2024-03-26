@@ -1,8 +1,5 @@
 package airbnb.api;
-import airbnb.dto.response.ForHomeProfile;
-import airbnb.dto.response.ForUsersTable;
-import airbnb.dto.response.PaginationResponse;
-import airbnb.dto.response.SimpleResponse;
+import airbnb.dto.response.*;
 import airbnb.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +35,9 @@ public class AdminAPI {
     List<ForUsersTable> getAll (){
         return adminService.getAll();
     }
+    @GetMapping("/findUserWithBookings/{id}")
+    ForUserProfileWithBookings getWithBookings(@PathVariable long id){ return adminService.getWithBookings(id);}
+    @GetMapping("/findUserWithAnnouncements/{id}")
+    ForUserProfileWithBookings getWithAnnouncements(@PathVariable long id){ return adminService.getWithAnnouncements(id);}
 
 }

@@ -57,7 +57,7 @@ public class User implements UserDetails {
 
 
     //************************************  Announcement   **************************************
-    @OneToMany(mappedBy = "user", cascade = {DETACH, REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {DETACH, REMOVE}, fetch = FetchType.EAGER)
     private List<Announcement> announcements;
 
     @Override
