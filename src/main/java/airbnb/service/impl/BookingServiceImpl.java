@@ -43,30 +43,36 @@ public class BookingServiceImpl implements BookingService {
         if (!currentUser.getRole().equals(Role.USER)) {
             throw new ForbiddenException("You can't book!!!");
         }
-        if (bookingRequest.checkIn() != null && bookingRequest.checkOut() != null) {
-            if (booking.getAnnouncement().getId() == null) {
-                long daysBetween = ChronoUnit.DAYS.between(bookingRequest.checkIn(), bookingRequest.checkOut());
-                long totalPrice = Math.multiplyExact(daysBetween, price.longValue());
-                booking.setCheckIn(bookingRequest.checkIn());
-                booking.setCheckOut(bookingRequest.checkOut());
-                booking.setTotalPrice(BigDecimal.valueOf(totalPrice));
-                booking.setUser(currentUser);
-                booking.setAnnouncement(announcement);
-                if (currentUser.getMoney().compareTo(BigDecimal.valueOf(totalPrice)) >= 0) {
-                    bookingRepository.save(booking);
-                    log.info("You have successfully booked a house for " + daysBetween + " days!");
-                } else {
-                    throw new NotFoundException("You don't have enough funds!");
-                }
-            } else {
-                throw new NotFoundException("This house is already occupied!");
-            }
-        } else {
+        if (bookingRequest.checkIn() == null || bookingRequest.checkOut() == null) {
             throw new NullPointerException("Check-in or check-out date is null!");
         }
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("You have successfully booked a house for days!")
-                .build();
+        for (Booking announcementBooking : announcement.getBookings()) {
+            if (bookingRequest.checkIn().isBefore(announcementBooking.getCheckOut()) &&
+                    bookingRequest.checkOut().isAfter(announcementBooking.getCheckIn())) {
+                throw new NotFoundException("This house is already occupied!");
+            }
+        }
+        long daysBetween = ChronoUnit.DAYS.between(bookingRequest.checkIn(), bookingRequest.checkOut());
+        long totalPrice = Math.multiplyExact(daysBetween, price.longValue());
+        if (currentUser.getMoney().compareTo(BigDecimal.valueOf(totalPrice)) >= 0) {
+            BigDecimal newBalance = currentUser.getMoney().subtract(BigDecimal.valueOf(totalPrice));
+            currentUser.setMoney(newBalance);
+            userRepository.save(currentUser);
+            booking.setCheckIn(bookingRequest.checkIn());
+            booking.setCheckOut(bookingRequest.checkOut());
+            booking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+            booking.setUser(currentUser);
+            booking.setAnnouncement(announcement);
+            bookingRepository.save(booking);
+            log.info("You have successfully booked a house for " + daysBetween + " days!");
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .message("You have successfully booked a house for " + daysBetween + " days!")
+                    .build();
+        } else {
+            throw new NotFoundException("You don't have enough funds!");
+        }
     }
+
+
 }
