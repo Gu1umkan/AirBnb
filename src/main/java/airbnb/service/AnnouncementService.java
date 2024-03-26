@@ -1,10 +1,7 @@
 package airbnb.service;
 
 import airbnb.dto.request.AnnouncementRequest;
-import airbnb.dto.response.AnnouncementResponse;
-import airbnb.dto.response.AnnouncementResponsePagination;
-import airbnb.dto.response.FindByAnnouncementID;
-import airbnb.dto.response.SimpleResponse;
+import airbnb.dto.response.*;
 import airbnb.entities.enums.HouseType;
 import airbnb.entities.enums.Region;
 
@@ -31,4 +28,19 @@ public interface AnnouncementService {
     List<AnnouncementResponse> isActive();
 
     FindByAnnouncementID findById(Long announcementId);
+
+
+    List<FindALlBookingsResponse> findALlBookings(int page, int size);
+
+
+    BookingsHouseResponse BookingsHouse(Long announcementId);
+
+
+    List<VendorMyAnnouncementResponse> MyAnnouncement( int page, int size);
+
+
+    SimpleResponse removeByAnnouncementVendor(Long announcementId);
+
+
+    SimpleResponse update(Long announcementId, AnnouncementUpdateRequest announcementRequest);
 }
