@@ -43,4 +43,14 @@ public class GlobalHandlerException {
                 .message(e.getMessage())
                 .build();
     }
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse nullPointer (NullPointerException e) {
+        log.error(e.getMessage());
+        return ExceptionResponse.builder()
+                .httpStatus(HttpStatus.NOT_FOUND)
+                .exceptionClassName(e.getClass().getSimpleName())
+                .message(e.getMessage())
+                .build();
+    }
 }
