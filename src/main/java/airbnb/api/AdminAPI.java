@@ -16,7 +16,7 @@ public class AdminAPI {
                               @RequestParam int size){
         return adminService.getAllHome(page,size);
     }
-    @GetMapping("/reject/{id}")
+    @GetMapping("/rejectHome/{id}")
     SimpleResponse reject(@PathVariable long id,
                           @RequestParam String cause){
         return adminService.reject(id, cause);
@@ -39,5 +39,6 @@ public class AdminAPI {
     ForUserProfileWithBookings getWithBookings(@PathVariable long id){ return adminService.getWithBookings(id);}
     @GetMapping("/findUserWithAnnouncements/{id}")
     ForUserProfileWithBookings getWithAnnouncements(@PathVariable long id){ return adminService.getWithAnnouncements(id);}
-
+    @DeleteMapping("/deleteUser/{id}")
+    SimpleResponse remove(@PathVariable long id){ return adminService.remove(id);}
 }
