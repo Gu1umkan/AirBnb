@@ -1,19 +1,15 @@
 package airbnb.dto.request;
 
-import airbnb.validation.CheckOutAndCheckInValidation;
-import jakarta.validation.constraints.NotNull;
+import airbnb.validation.LocalDateValidation;
+import lombok.Builder;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@CheckOutAndCheckInValidation
+@Builder
 public record BookingRequest(
-        @NotNull
+        @LocalDateValidation
         LocalDate checkIn,
-        @NotNull
-        LocalDate checkOut,
-        @NotNull
-        BigDecimal totalPrice,
-        @NotNull
-        Long announcementId) {
+        @LocalDateValidation
+        LocalDate checkOut
+) {
 }

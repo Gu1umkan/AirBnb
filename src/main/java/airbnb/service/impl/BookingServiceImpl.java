@@ -19,19 +19,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingServiceImpl implements BookingService {
-
-    private final AnnouncementRepository announcementRepository;
-    private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final AnnouncementRepository announcementRepository;
 
     @Override
-    public SecondBookingResponse findBookingByPrincipalAndAnnouncement(Principal principal, Long announcementId) {
-        User loginUser = getPrincipalUser(principal);
+    public SecondBookingResponse findBookingByPrincipalAndAnnouncement(Long announcementId) {
+        User loginUser = getCurrentUser();
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(() -> new NotFoundException("Announcement with id " + announcementId + " not found!"));
         Booking booking = bookingRepository.findBookingByUserAndAnnouncement(loginUser, announcement);
         if (booking != null) {
@@ -41,54 +45,76 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public SimpleResponse saveBooking(BookingRequest bookingRequest, Principal principal) {
-        User loginUser = getPrincipalUser(principal);
-
-        Announcement announcement = announcementRepository.findById(bookingRequest.announcementId()).orElseThrow(() -> new NotFoundException("Announcement with id " + bookingRequest.announcementId() + " not found!"));
-        Booking foundBooking = bookingRepository.findBookingByUserAndAnnouncement(loginUser, announcement);
-        boolean isBookingAlready = bookingRepository.isBookingAlready(bookingRequest.checkIn(), bookingRequest.checkOut(), announcement.getId());
-
-        if (foundBooking != null) {
-            throw new BookingAlreadyExistsException("Booking with this user and announcement already exists");
-        }
-        if (isBookingAlready) {
-            throw new BookingAlreadyExistsException("Booking already exists for the specified period!");
-        }
-
-        Booking booking = new Booking();
-        booking.setAnnouncement(announcement);
-        booking.setUser(loginUser);
-        booking.setCheckIn(bookingRequest.checkIn());
-        booking.setTotalPrice(bookingRequest.totalPrice());
-        booking.setCheckOut(bookingRequest.checkOut());
-        bookingRepository.save(booking);
-        return SimpleResponse.builder().message("Successfully saved!").httpStatus(HttpStatus.OK).build();
-    }
-
-    private User getPrincipalUser(Principal principal) {
-        if (principal == null) {
-            throw new ForbiddenException("You must be authenticated to perform this action!");
-        }
-        String email = principal.getName();
-        User loginUser = userRepository.getByEmail(email);
-        if (loginUser.getRole().equals(Role.ADMIN)) {
-            throw new ForbiddenException("User with role ADMIN can't save/update/get booking!");
-        }
-        return loginUser;
-    }
-
-    @Override
     @Transactional
-    public SimpleResponse updateTimeOfBooking(BookingRequest bookingRequest, Principal principal) {
-        User loginUser = getPrincipalUser(principal);
-        Announcement announcement = announcementRepository.findById(bookingRequest.announcementId()).orElseThrow(() -> new NotFoundException("Announcement with id " + bookingRequest.announcementId() + " not found!"));
+    public SimpleResponse updateTimeOfBooking(BookingRequest bookingRequest, Long announcementId) {
+        User loginUser = getCurrentUser();
+        Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(() -> new NotFoundException("Announcement with id " + announcementId + " not found!"));
+        BigDecimal price = announcement.getPrice();
         Booking booking = bookingRepository.findBookingByUserAndAnnouncement(loginUser, announcement);
         if (booking == null) {
             throw new NotFoundException("Booking with user and announcement not found!");
         }
-        booking.setCheckOut(bookingRequest.checkOut());
-        booking.setCheckIn(bookingRequest.checkIn());
-        booking.setTotalPrice(bookingRequest.totalPrice());
-        return SimpleResponse.builder().message("Successfully updated!").httpStatus(HttpStatus.OK).build();
+        long daysBetween = ChronoUnit.DAYS.between(bookingRequest.checkIn(), bookingRequest.checkOut());
+        long totalPrice = Math.multiplyExact(daysBetween, price.longValue());
+        if (loginUser.getMoney().compareTo(BigDecimal.valueOf(totalPrice)) >= 0) {
+            BigDecimal newBalance = loginUser.getMoney().subtract(BigDecimal.valueOf(totalPrice));
+            loginUser.setMoney(newBalance);
+
+            booking.setCheckIn(bookingRequest.checkIn());
+            booking.setCheckOut(bookingRequest.checkOut());
+            booking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+
+            return SimpleResponse.builder().message("Successfully updated!").httpStatus(HttpStatus.OK).build();
+        } else {
+            throw new NotFoundException("You don't have enough funds!");
+        }
+    }
+    private User getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.getByEmail(email);
+    }
+
+    @Override
+    public SimpleResponse booking(BookingRequest bookingRequest, Long announcementId) {
+        User currentUser = getCurrentUser();
+        Booking booking = new Booking();
+        Announcement announcement = announcementRepository.findByAnnouncementId(announcementId);
+        Booking foundBooking = bookingRepository.findBookingByUserAndAnnouncement(currentUser, announcement);
+        BigDecimal price = announcement.getPrice();
+        if (!currentUser.getRole().equals(Role.USER)) {
+            throw new ForbiddenException("You can't book!!!");
+        }
+        if (bookingRequest.checkIn() == null || bookingRequest.checkOut() == null) {
+            throw new NullPointerException("Check-in or check-out date is null!");
+        }
+        if (foundBooking != null) {
+            throw new BookingAlreadyExistsException("Booking with this user and announcement already exists");
+        }
+        for (Booking announcementBooking : announcement.getBookings()) {
+            if (bookingRequest.checkIn().isBefore(announcementBooking.getCheckOut()) &&
+                    bookingRequest.checkOut().isAfter(announcementBooking.getCheckIn())) {
+                throw new NotFoundException("This house is already occupied!");
+            }
+        }
+        long daysBetween = ChronoUnit.DAYS.between(bookingRequest.checkIn(), bookingRequest.checkOut());
+        long totalPrice = Math.multiplyExact(daysBetween, price.longValue());
+        if (currentUser.getMoney().compareTo(BigDecimal.valueOf(totalPrice)) >= 0) {
+            BigDecimal newBalance = currentUser.getMoney().subtract(BigDecimal.valueOf(totalPrice));
+            currentUser.setMoney(newBalance);
+            userRepository.save(currentUser);
+            booking.setCheckIn(bookingRequest.checkIn());
+            booking.setCheckOut(bookingRequest.checkOut());
+            booking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+            booking.setUser(currentUser);
+            booking.setAnnouncement(announcement);
+            bookingRepository.save(booking);
+            log.info("You have successfully booked a house for " + daysBetween + " days!");
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .message("You have successfully booked a house for " + daysBetween + " days!")
+                    .build();
+        } else {
+            throw new NotFoundException("You don't have enough funds!");
+        }
     }
 }

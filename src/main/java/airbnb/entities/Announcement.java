@@ -56,7 +56,7 @@ public class Announcement {
 
     //************************************  Booking  **************************************
 
-    @OneToMany(mappedBy = "announcement",cascade = {PERSIST,DETACH})
+    @OneToMany(mappedBy = "announcement",cascade = {PERSIST,DETACH} , fetch = FetchType.EAGER)
     private List<Booking> bookings;
 }
 

@@ -17,14 +17,6 @@ import org.springframework.stereotype.Repository;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     Booking findBookingByUserAndAnnouncement(User user, Announcement announcement);
 
-    @Query("SELECT COUNT(b) > 0 FROM Booking b WHERE b.announcement.id = :announcementId AND "
-            + "((b.checkIn <= :checkOut AND b.checkOut >= :checkIn) OR "
-            + "(b.checkIn >= :checkIn AND b.checkOut <= :checkOut) OR "
-            + "(b.checkIn <= :checkIn AND b.checkOut >= :checkOut))")
-    boolean isBookingAlready(
-            LocalDate checkIn,
-            LocalDate checkOut,
-            Long announcementId);
     default Booking findByBookingId(Long bookingId) {
         return findById(bookingId).orElseThrow(() ->
                 new NotFoundException("Application with id: " + bookingId + "  not found!"));
