@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/booking")
-public class BookingApi {
+public class BookingAPI {
      private final BookingService bookingService;
      @Secured("USER")
      @PostMapping("/save/{announcementId}")
