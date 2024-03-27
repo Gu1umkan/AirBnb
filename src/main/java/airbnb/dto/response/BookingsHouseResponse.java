@@ -22,7 +22,7 @@ public record BookingsHouseResponse (
         int maxOfGuests,
         List<BookingResponse> booked,
         List<BookingInFavoritesResponse> inFavorites,
-        List<BookingFeedbackResponse>  feedback
+        List<FeedbackResponse>  feedback
 
     //////  booking  //////
 

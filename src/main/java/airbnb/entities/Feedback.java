@@ -23,11 +23,11 @@ public class Feedback {
 
     private Long id;
     private String feedback;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> images;
     private LocalDate createdAt;
-    private LocalDate updateAt;
-        private int rating;
+    private LocalDate updatedAt;
+    private int rating;
 
 
     //******************************************  User   ***************************
@@ -35,13 +35,23 @@ public class Feedback {
     private User user;
 
     //******************************************  Like   ***************************
-    @OneToMany(mappedBy = "feedback",cascade = {DETACH,REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "feedback", cascade = {DETACH, REMOVE}, fetch = FetchType.EAGER)
     private List<Like> likes;
 
     //******************************************  Favorite   ************************
 
     @ManyToOne(cascade = DETACH)
     private Announcement announcement;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDate.now();
+    }
 
 }
 

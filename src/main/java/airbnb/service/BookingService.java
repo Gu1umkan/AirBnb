@@ -7,7 +7,7 @@ import airbnb.dto.response.SimpleResponse;
 import java.security.Principal;
 
 public interface BookingService {
-    SecondBookingResponse findBookingByPrincipalAndAnnouncement(Long announcementId);
+    SecondBookingResponse findBookingByUserAndAnnouncement(Long announcementId);
     SimpleResponse updateTimeOfBooking(BookingRequest bookingRequest, Long announcementId);
     SimpleResponse booking(BookingRequest bookingRequest, Long announcementId);
 

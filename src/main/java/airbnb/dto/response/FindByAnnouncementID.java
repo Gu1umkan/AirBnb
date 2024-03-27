@@ -16,9 +16,11 @@ public record FindByAnnouncementID(
         int maxOfGuests,
         String town,
         String address,
+        boolean myAnnouncementOrNot,
+        SecondBookingResponse bookedOrNot,
         HouseType houseType,
         Region region,
 
-        List<BookingFeedbackResponse> feedbacks
+        List<FeedbackResponse> feedbacks
 ) {
 }
