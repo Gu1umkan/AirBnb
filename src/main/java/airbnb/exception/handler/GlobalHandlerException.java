@@ -1,9 +1,6 @@
 package airbnb.exception.handler;
 
-import airbnb.exception.BookingAlreadyExistsException;
-import airbnb.exception.ExceptionResponse;
-import airbnb.exception.ForbiddenException;
-import airbnb.exception.NotFoundException;
+import airbnb.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +24,16 @@ public class GlobalHandlerException {
     @ExceptionHandler(BookingAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse bookingAlreadyExists (BookingAlreadyExistsException e) {
+        log.error(e.getMessage());
+        return ExceptionResponse.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .exceptionClassName(e.getClass().getSimpleName())
+                .message(e.getMessage())
+                .build();
+    }
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse bookingAlreadyExists (BadRequestException e) {
         log.error(e.getMessage());
         return ExceptionResponse.builder()
                 .httpStatus(HttpStatus.BAD_REQUEST)

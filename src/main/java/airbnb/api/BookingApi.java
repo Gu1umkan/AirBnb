@@ -14,17 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/booking")
 public class BookingApi {
-     private final BookingService bookingService;
-     @Secured("USER")
-     @PostMapping("/save/{announcementId}")
-     public SimpleResponse booking(@Valid @PathVariable Long announcementId, BookingRequest bookingRequest){
-          return bookingService.booking(bookingRequest,announcementId);
-     }
+    private final BookingService bookingService;
 
-    @Secured("USER")
+    @Secured({"USER", "VENDOR"})
+    @PostMapping("/save/{announcementId}")
+    public SimpleResponse booking(@Valid @PathVariable Long announcementId, BookingRequest bookingRequest) {
+        return bookingService.booking(bookingRequest, announcementId);
+    }
+
+    @Secured({"USER", "VENDOR"})
     @Operation(description = "Update booking")
     @PutMapping("/put/{announcementId}")
     public SimpleResponse updateBooking(@RequestBody @Valid BookingRequest bookingRequest, @PathVariable Long announcementId) {
-        return bookingService.updateTimeOfBooking(bookingRequest,  announcementId);
+        return bookingService.updateTimeOfBooking(bookingRequest, announcementId);
     }
 }

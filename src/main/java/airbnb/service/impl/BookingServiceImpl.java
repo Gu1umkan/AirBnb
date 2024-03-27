@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
     private final AnnouncementRepository announcementRepository;
 
     @Override
-    public SecondBookingResponse findBookingByPrincipalAndAnnouncement(Long announcementId) {
+    public SecondBookingResponse findBookingByUserAndAnnouncement(Long announcementId) {
         User loginUser = getCurrentUser();
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(() -> new NotFoundException("Announcement with id " + announcementId + " not found!"));
         Booking booking = bookingRepository.findBookingByUserAndAnnouncement(loginUser, announcement);

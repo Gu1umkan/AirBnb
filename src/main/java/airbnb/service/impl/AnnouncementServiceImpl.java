@@ -11,7 +11,10 @@ import airbnb.repository.AnnouncementRepository;
 import airbnb.repository.BookingRepository;
 import airbnb.repository.UserRepository;
 import airbnb.service.AnnouncementService;
+import airbnb.service.BookingService;
+import airbnb.service.FeedbackService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,17 +23,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnnouncementServiceImpl implements AnnouncementService {
     private final AnnouncementRepository announcementRepo;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
-
+    private final FeedbackService feedbackService;
+    private final BookingService bookingService;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -171,7 +175,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public List<AnnouncementResponse> isActive() {
         boolean is = true;
         List<AnnouncementResponse> houseResponse = announcementRepo.isActive(is);
-        ;
         for (AnnouncementResponse h : houseResponse) {
             h.setImages(announcementRepo.findImagesByHouseId(h.getId()));
         }
@@ -181,20 +184,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public FindByAnnouncementID findById(Long announcementId) {
         Announcement byAnnouncementId = announcementRepo.findByAnnouncementId(announcementId);
-
-        List<BookingFeedbackResponse> bookingFeedbackResponses = new ArrayList<>();
-        for (Feedback feedback : byAnnouncementId.getFeedbacks()) {
-            bookingFeedbackResponses.add(new BookingFeedbackResponse(
-                    feedback.getUser().getId(),
-                    feedback.getUser().getFullName(),
-                    feedback.getUser().getImage(),
-                    feedback.getFeedback(),
-                    feedback.getImages(),
-                    feedback.getUser().getCreatedAt(),
-                    feedback.getRating()
-            ));
-
-        }
+        User currentUser = getCurrentUser();
         return FindByAnnouncementID
                 .builder()
                 .id(byAnnouncementId.getId())
@@ -203,9 +193,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .description(byAnnouncementId.getDescription())
                 .maxOfGuests(byAnnouncementId.getMaxOfGuests())
                 .town(byAnnouncementId.getTown())
+                .myAnnouncementOrNot(currentUser.getId().equals(byAnnouncementId.getUser().getId()))
+                .bookedOrNot(bookingService.findBookingByUserAndAnnouncement(byAnnouncementId.getId()))
                 .address(byAnnouncementId.getAddress())
                 .houseType(byAnnouncementId.getHouseType())
                 .region(byAnnouncementId.getRegion())
+                .feedbacks(feedbackService.getAllFeedbacksByAnnouncement(byAnnouncementId.getId()))
                 .build();
 
     }
@@ -288,18 +281,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             ));
         }
 
-        List<BookingFeedbackResponse> bookingFeedbackResponses = new ArrayList<>();
-        for (Feedback feedback : byAnnouncementId.getFeedbacks()) {
-            bookingFeedbackResponses.add(new BookingFeedbackResponse(
-                    feedback.getUser().getId(),
-                    feedback.getUser().getFullName(),
-                    feedback.getUser().getImage(),
-                    feedback.getFeedback(),
-                    feedback.getImages(),
-                    feedback.getUser().getCreatedAt(),
-                    feedback.getRating()
-            ));
-        }
 
         return BookingsHouseResponse
                 .builder()
@@ -314,7 +295,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .maxOfGuests(byAnnouncementId.getMaxOfGuests())
                 .booked(bookingResponses)
                 .inFavorites(bookingInFavoritesResponseList)
-                .feedback(bookingFeedbackResponses)
+                .feedback(feedbackService.getAllFeedbacksByAnnouncement(byAnnouncementId.getId()))
                 .build();
     }
 
@@ -379,10 +360,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 byAnnouncementId.setRegion(announcementRequest.getRegion());
             }
         }
-            return SimpleResponse.builder()
-                    .httpStatus(HttpStatus.OK)
-                    .message("updated !! ")
-                    .build();
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("updated !! ")
+                .build();
     }
 
 }
