@@ -20,4 +20,6 @@ public interface AdminService {
     ForUserProfileWithBookings getWithBookings(long id);
 
     ForUserProfileWithBookings getWithAnnouncements(long id);
+
+    SimpleResponse remove(long id);
 }
