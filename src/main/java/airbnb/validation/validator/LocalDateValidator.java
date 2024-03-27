@@ -1,7 +1,7 @@
 package airbnb.validation.validator;
 
-import airbnb.validation.LocalDateValidation;
 import jakarta.validation.ConstraintValidator;
+import airbnb.validation.LocalDateValidation;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;

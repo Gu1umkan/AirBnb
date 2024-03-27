@@ -1,9 +1,11 @@
 package airbnb.dto.response;
 
+import java.time.LocalDate;
+
 import lombok.Builder;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 @Builder
 public record BookingResponse(
 

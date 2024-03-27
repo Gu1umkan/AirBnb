@@ -1,19 +1,22 @@
 package airbnb.repository;
 
-import airbnb.dto.response.BookingsHouseResponse;
 import airbnb.entities.Announcement;
 import airbnb.entities.Booking;
+import airbnb.entities.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDate;
 import airbnb.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+    Booking findBookingByUserAndAnnouncement(User user, Announcement announcement);
+
     default Booking findByBookingId(Long bookingId) {
         return findById(bookingId).orElseThrow(() ->
                 new NotFoundException("Application with id: " + bookingId + "  not found!"));
