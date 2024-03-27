@@ -1,5 +1,6 @@
 package airbnb.exception.handler;
 
+import airbnb.exception.BookingAlreadyExistsException;
 import airbnb.exception.ExceptionResponse;
 import airbnb.exception.ForbiddenException;
 import airbnb.exception.NotFoundException;
@@ -23,6 +24,16 @@ public class GlobalHandlerException {
                 .message(e.getMessage())
                 .build();
     }
+    @ExceptionHandler(BookingAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse bookingAlreadyExists (BookingAlreadyExistsException e) {
+        log.error(e.getMessage());
+        return ExceptionResponse.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .exceptionClassName(e.getClass().getSimpleName())
+                .message(e.getMessage())
+                .build();
+    }
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse forbiddenException (ForbiddenException e) {
@@ -36,6 +47,16 @@ public class GlobalHandlerException {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse notFound (NotFoundException e) {
+        log.error(e.getMessage());
+        return ExceptionResponse.builder()
+                .httpStatus(HttpStatus.NOT_FOUND)
+                .exceptionClassName(e.getClass().getSimpleName())
+                .message(e.getMessage())
+                .build();
+    }
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse nullPointer (NullPointerException e) {
         log.error(e.getMessage());
         return ExceptionResponse.builder()
                 .httpStatus(HttpStatus.NOT_FOUND)
