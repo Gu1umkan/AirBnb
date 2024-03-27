@@ -190,4 +190,13 @@ public class AdminServiceImpl implements AdminService {
                 .email(user.getEmail())
                 .houses(houses).build();
     }
+
+    @Override
+    public SimpleResponse remove(long id) {
+        User user = adminRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id not found!"));
+        adminRepository.delete(user);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("User successfully removed!").build();
+    }
 }
