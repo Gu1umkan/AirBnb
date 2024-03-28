@@ -30,5 +30,6 @@ public class Like {
     @ManyToOne(cascade = DETACH)
     private Feedback feedback;
 
+
 }
 

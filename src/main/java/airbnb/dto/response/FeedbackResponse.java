@@ -6,13 +6,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Builder
-public record BookingFeedbackResponse(
+public record FeedbackResponse(
         Long id,
-        String fullName,
-        String image,
+        boolean myOrNot,
         String feedback,
         List<String> images,
+        int rating,
+        FeedbackUserResponse user,
+        LikeResponse likes,
         LocalDate createdAt,
-        int rating
-) {
+        LocalDate updatedAt) {
 }
