@@ -26,9 +26,7 @@ public class SignUpRequest {
     @EmailValidation
     private String email;
     @PasswordValidation
-    private String password;    
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String password;
     @BigDecimalValidation
     private BigDecimal money;
 

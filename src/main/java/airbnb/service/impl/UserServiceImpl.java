@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
                 .image(singUpRequest.getImage())
                 .email(singUpRequest.getEmail())
                 .password(passwordEncoder.encode(singUpRequest.getPassword()))
-                .role(Role.USER)
                 .money(singUpRequest.getMoney())
+                .role(Role.USER)
                 .build());
         log.info("User: " + singUpRequest.getFullName() + " successfully saved! ");
         return SimpleResponse.builder()
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SimpleResponse deleteById(Long id) {
         User user = userRepository.gettById(id);
-        if(user.getRole().equals(Role.ADMIN)){
+        if (user.getRole().equals(Role.ADMIN)) {
             log.error(" You can't remove the administrator!!! ");
             throw new ForbiddenException(" You can't remove the administrator!!! ");
         }
@@ -138,7 +138,6 @@ public class UserServiceImpl implements UserService {
         user.setImage(signUpRequest.getImage());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setRole(signUpRequest.getRole());
         user.setMoney(signUpRequest.getMoney());
         return UserInfoResponse.builder()
                 .id(user.getId())
