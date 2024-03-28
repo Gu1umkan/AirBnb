@@ -26,8 +26,6 @@ public class InitialService {
     @PostConstruct
     public  void  saveDate(){
         String encode  = passwordEncoder.encode("java12");
-
-
         User admin = User
                 .builder()
                 .fullName("Admin")
@@ -38,12 +36,11 @@ public class InitialService {
                 .role(Role.ADMIN)
                 .createdAt(LocalDate.of(2004,2,4))
                 .build();
-
-//        userRepository.save(admin);
+        userRepository.save(admin);
 //        restaurantRepository.save
 //        (rest);
-
-        // validate
+//
+//         validate
 
 
 
