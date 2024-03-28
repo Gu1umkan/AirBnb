@@ -1,11 +1,13 @@
 package airbnb.service.impl;
 import airbnb.dto.response.*;
 import airbnb.entities.Announcement;
+import airbnb.entities.Block;
 import airbnb.entities.Booking;
 import airbnb.entities.User;
 import airbnb.exception.NotFoundException;
 import airbnb.repository.AdminRepository;
 import airbnb.repository.AnnouncementRepository;
+import airbnb.repository.BlockRepository;
 import airbnb.repository.BookingRepository;
 import airbnb.service.AdminService;
 import jakarta.transaction.Transactional;
@@ -26,6 +28,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final AnnouncementRepository homeRepository;
     private final BookingRepository bookingRepository;
+    private final BlockRepository blockRepository;
 
     @Override
     public PaginationResponse getAllHome(int page, int size) {
@@ -198,5 +201,21 @@ public class AdminServiceImpl implements AdminService {
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("User successfully removed!").build();
+    }
+
+    @Override
+    @Transactional
+    public SimpleResponse blockAll(long id) {
+        User user = adminRepository.findById(id).orElseThrow(() -> new NotFoundException("User with this id not found!"));
+        List<Announcement> announcements = user.getAnnouncements();
+        for (Announcement announcement : announcements) {
+            Block block = new Block();
+            Block saveBlock = blockRepository.save(block);
+            saveBlock.setAnnouncement(announcement);
+            saveBlock.setUser(user);
+        }
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Success!").build();
     }
 }
