@@ -22,4 +22,6 @@ public interface AdminService {
     ForUserProfileWithBookings getWithAnnouncements(long id);
 
     SimpleResponse remove(long id);
+
+    SimpleResponse blockAll(long id);
 }

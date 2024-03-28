@@ -40,5 +40,9 @@ public class AdminAPI {
     @GetMapping("/findUserWithAnnouncements/{id}")
     ForUserProfileWithBookings getWithAnnouncements(@PathVariable long id){ return adminService.getWithAnnouncements(id);}
     @DeleteMapping("/deleteUser/{id}")
-    SimpleResponse remove(@PathVariable long id){ return adminService.remove(id);}
+     SimpleResponse remove(@PathVariable long id){ return adminService.remove(id);}
+    @PutMapping ("/blockAllAnnouncementByUserId/{id}")
+    SimpleResponse blockAll (@PathVariable long id){
+        return adminService.blockAll(id);
+    }
 }
